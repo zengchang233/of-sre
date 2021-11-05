@@ -1,2 +1,55 @@
-# of-sre
-speaker recognition implemented by oneflow library
+# OneFlow-SRE
+Speaker recognition implemented by oneflow library.
+
+## Introduction
+
+This repo contains several usual models including x-vector (TDNN, ETDNN, ECAPA-TDNN), r-vector (ResNet18 variants, ResNet34 variants).
+
+It also contains several different training methodology such as few-shot learning (ProtoNet), discriminative learning (softmax variants)
+
+### feature
+
+- [] stft
+- [] log stft
+- [] fbank
+- [] log fbank
+- [] mfcc
+
+### dataloader
+
+- [] variable length
+- [] balance batch sampler
+- [] GPU feature extraction (once OneFlow supports acoustic feature extraction, I will implement it)
+
+### Front-end
+
+- [] TDNN
+- [] ETDNN
+- [] ECAPA-TDNN
+- [] ResNet18
+- [] ResNet34
+
+### Pooling
+
+- [] statistics pooling
+- [] attentive statistics pooling
+- [] multi-head self-attentive pooling
+
+### Loss function
+
+- [] softmax
+- [] am-softmax
+- [] angular prototypical loss
+- [] triplet loss
+
+### Back-end
+
+- [] cosine similarity
+- [] PLDA
+
+### Demos
+
+#### Datasets
+
+- [] VoxCeleb 1&2
+- [] CNCeleb 1&2
