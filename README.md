@@ -9,11 +9,11 @@ It also contains several different training methodology such as few-shot learnin
 
 ### feature
 
-- [] stft
-- [] log stft
-- [] fbank
-- [] log fbank
-- [] mfcc
+- [x] stft
+- [x] log stft
+- [x] fbank
+- [x] log fbank
+- [x] mfcc
 
 ### dataloader
 

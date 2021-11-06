@@ -1,0 +1,22 @@
+Log file created at: 2021/11/06 11:24:33
+Running on machine: BCM-head
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I1106 11:24:33.045425 30946 global.h:36] NewGlobal 14cudaDeviceProp
+I1106 11:24:33.085669 30946 global.h:36] NewGlobal N7oneflow7EnvDescE
+I1106 11:24:33.085683 30946 global.h:36] NewGlobal N7oneflow10ProcessCtxE
+I1106 11:24:33.085688 30946 env_global_objects_scope.cpp:152] using rpc backend: local
+I1106 11:24:33.085695 30946 global.h:36] NewGlobal N7oneflow12ResourceDescE
+I1106 11:24:33.085700 30946 global.h:36] NewGlobal N7oneflow12ResourceDescE
+W1106 11:24:33.085727 30946 cuda_device_descriptor_class.cpp:47] no CUDA-capable device is detected
+I1106 11:24:33.090065 30946 global.h:36] NewGlobal N7oneflow10ThreadPoolE
+I1106 11:24:33.090160 30946 global.h:36] NewGlobal N7oneflow16EagerNcclCommMgrE
+I1106 11:24:33.090165 30946 global.h:36] NewGlobal N7oneflow18CudnnConvAlgoCacheE
+I1106 11:24:33.090168 30946 global.h:36] NewGlobal N7oneflow2vm19VirtualMachineScopeE
+I1106 11:24:33.090171 30946 global.h:36] NewGlobal N7oneflow9OneflowVME
+I1106 11:24:33.090358 30946 oneflow_vm.cpp:75] transport stream type: N7oneflow2vm13CpuStreamTypeE
+I1106 11:24:33.090404 30946 global.h:36] NewGlobal N7oneflow27EagerJobBuildAndInferCtxMgrE
+I1106 11:24:33.090409 30946 global.h:36] NewGlobal N7oneflow12EpollCommNetE
+I1106 11:24:33.090453 30946 epoll_comm_network.cpp:63] CommNet:Epoll listening on 0.0.0.0:46645
+I1106 11:24:33.090466 30946 epoll_comm_network.cpp:197] machine 0 sockfd -1
+I1106 11:24:33.090523 30946 global.h:36] NewGlobal N7oneflow9TransportE
+I1106 11:24:33.090579 30946 global.h:36] NewGlobal N7oneflow25MultiClientSessionContextE
