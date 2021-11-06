@@ -12,6 +12,7 @@ import oneflow.nn as nn
 import oneflow.nn.functional as F
 
 from librosa import stft, magphase
+import numpy as np
 from numpy import log1p
 from python_speech_features import mfcc, fbank, logfbank
 
