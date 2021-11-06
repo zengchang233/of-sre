@@ -1,4 +1,0 @@
-Log file created at: 2021/11/06 23:32:23
-Running on machine: BCM-head
-Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
-W1106 23:32:23.401876 28412 cuda_device_descriptor_class.cpp:47] no CUDA-capable device is detected
