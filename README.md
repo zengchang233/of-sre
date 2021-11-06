@@ -17,34 +17,34 @@ It also contains several different training methodology such as few-shot learnin
 
 ### dataloader
 
-- [ ] variable length
-- [ ] balance batch sampler
+- [x] variable length
+- [x] balance batch sampler
 - [ ] GPU feature extraction (once OneFlow supports acoustic feature extraction, I will implement it)
 
 ### Front-end
 
-- [ ] TDNN
-- [ ] ETDNN
+- [x] TDNN
+- [x] ETDNN
 - [ ] ECAPA-TDNN
 - [ ] ResNet18
 - [ ] ResNet34
 
 ### Pooling
 
-- [ ] statistics pooling
+- [x] statistics pooling
 - [ ] attentive statistics pooling
 - [ ] multi-head self-attentive pooling
 
 ### Loss function
 
-- [ ] softmax
-- [ ] am-softmax
+- [x] softmax
+- [x] am-softmax
 - [ ] angular prototypical loss
 - [ ] triplet loss
 
 ### Back-end
 
-- [ ] cosine similarity
+- [x] cosine similarity
 - [ ] PLDA
 
 ### Trainer
@@ -57,5 +57,11 @@ It also contains several different training methodology such as few-shot learnin
 
 #### Datasets
 
-- [ ] VoxCeleb 1&2
+- [x] VoxCeleb 1&2
 - [ ] CNCeleb 1&2
+
+### Note
+
+- Now it is a preliminary implementation without optimization so that the training speed is very slow (I think dataloader is the bottleneck)
+- Once OneFlow update their package, I will optimize my code for speaker recognition.
+- If you have any problem with this code, please contact me via zengchang.elec@gmail.com
