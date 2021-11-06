@@ -8,7 +8,7 @@ import oneflow as of
 import oneflow.nn as nn
 import oneflow.nn.functional as F
 
-from libs.components.scores import CosineScore
+#  from libs.components.scores import CosineScore
 
 #  class GE2ELoss(nn.Module):
 #
@@ -344,14 +344,15 @@ class AMSoftmax(nn.Module):
         self.margin = margin
         self.weights = nn.Parameter(of.Tensor(num_classes, embedding_size))
         nn.init.kaiming_normal_(self.weights)
+        self.cross_entropy = nn.CrossEntropyLoss()
 
     def forward(self, embeddings, labels):
-        logits = F.linear(F.normalize(embeddings), F.normalize(self.weights))
+        logits = F.linear(F.l2_normalize(embeddings, dim = 1), F.l2_normalize(self.weights, dim = 1))
         margin = of.zeros_like(logits)
         #  margin.scatter_(1, labels.view(-1,1), self.margin)
         margin = of.scatter(margin, 1, labels.view(-1, 1), self.margin)
         m_logits = self.s * (logits - margin)
-        loss = F.cross_entropy(m_logits, labels)
+        loss = self.cross_entropy(m_logits, labels)
         return loss, logits
 
 class LMCL(AMSoftmax):
@@ -434,6 +435,7 @@ class FocalLoss(nn.Module):
 
 
 if __name__ == '__main__':
+    pass
     # ocsoftmax = OCSoftmax(64)
     # inputs = torch.randn(4, 64)
     # target = torch.tensor([0,0,1,0], dtype = torch.int64)

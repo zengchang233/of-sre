@@ -104,8 +104,7 @@ class FeatureExtractor(nn.Module):
         '''
         feature = []
         for i in range(len(wave)):
-            print(wave[i].shape)
-            feature.append(of.tensor(self.feat(wave[i])).unsqueeze(0))
+            feature.append(of.tensor(self.feat(wave[i]).astype(np.float32)).unsqueeze(0))
         feature = of.cat(feature, dim = 0)
         return feature
 

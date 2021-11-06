@@ -65,7 +65,8 @@ class XVector(nn.Module):
     def extract_embedding(self, x):
         x = self.frame_level(x)
         x = self.pooling(x)
-        x.squeeze_(-1)
+        #  x.squeeze_(-1)
+        x = x.squeeze(-1)
         x_a = self.fc1(x)
         x = self.activation(x)
         x = self.bn1(x_a)

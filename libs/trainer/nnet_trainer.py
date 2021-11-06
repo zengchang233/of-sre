@@ -138,7 +138,8 @@ class NNetTrainer(base_trainer.BaseTrainer):
         1. trainloader 
         '''
         import multiprocessing
-        cpu_count = multiprocessing.cpu_count()
+        #  cpu_count = multiprocessing.cpu_count()
+        cpu_count = 0
         train_collate_fn = self.trainset.collate_fn
         if self.train_opts['loss'] == 'TripletLoss':
             from libs.dataio.dataset import BalancedBatchSampler
@@ -150,7 +151,7 @@ class NNetTrainer(base_trainer.BaseTrainer):
         else:
             batch_sampler = None
             self.trainloader = DataLoader(self.trainset, shuffle = True, collate_fn = train_collate_fn, batch_sampler = batch_sampler, 
-                                          batch_size = self.train_opts['bs'] * self.device_num, num_workers = cpu_count, pin_memory = True)
+                                          batch_size = self.train_opts['bs'] * self.device_num, num_workers = cpu_count)
     
     def train_epoch(self): 
         # you MUST overwrite this function
