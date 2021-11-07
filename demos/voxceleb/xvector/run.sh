@@ -2,8 +2,8 @@
 
 alias python=`which python3`
 
-stage=0
-debug=$1
+stage=1
+debug=false
 # train a frontend module
 if [ $stage -le 0 ]; then
     # options:
@@ -46,8 +46,6 @@ fi
 # evaluation on test set without backend (or using cosine backend)
 if [ $stage -le 1 ]; then
     expdir=$1
-    start=$2
-    stop=$3
     # for x in `seq $start $stop`; do
     #     python local/evaluation.py -e $expdir -m net_${x}.pth -d cuda -l far
         python local/evaluation.py -e $expdir -m best_dev_model.pth -d cuda -l far

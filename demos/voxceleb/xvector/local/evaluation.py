@@ -3,9 +3,12 @@ import sys
 sys.path.insert(0, "../../../")
 import argparse
 
-import torch
-import torch.nn.functional as F
-from torch.utils.data import DataLoader
+#  import torch
+#  import torch.nn.functional as F
+#  from torch.utils.data import DataLoader
+import oneflow as of
+import oneflow.nn.functional as F
+from oneflow.utils.data import DataLoader
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from tqdm import tqdm
@@ -19,7 +22,7 @@ class Evaluator(object):
     def __init__(self, data_opts, model_opts, args): 
         eval_dataset = SpeechEvalDataset(data_opts)
         self.input_dim = eval_dataset[0][0].size(0)
-        self.evalloader = DataLoader(eval_dataset, batch_size = 1, shuffle = False, num_workers = 8, pin_memory = True)
+        self.evalloader = DataLoader(eval_dataset, batch_size = 1, shuffle = False, num_workers = 8)
         self.build_model(model_opts)
         self.load_model(args)
         self.data_opts = data_opts
@@ -27,17 +30,16 @@ class Evaluator(object):
         self.location = args['l']
 
     def build_model(self, model_opts):
-        #  model_config = read_config("conf/model/{}.yaml".format(model_opts['arch']))
         model_config = model_opts
         model_config['input_dim'] = self.input_dim
         self.embedding_dim = model_config['embedding_dim']
         self.model = tdnn.XVector(model_config)
 
     def load_model(self, args): 
-        self.device = torch.device(args['d']) 
+        self.device = of.device(args['d']) 
         self.exp_dir = args['e']
         model_file_name = args['m']
-        ckpt = torch.load('exp/{}/{}'.format(self.exp_dir, model_file_name), map_location = self.device)
+        ckpt = of.load('exp/{}/{}'.format(self.exp_dir, model_file_name))
         self.model.load_state_dict(ckpt['state_dict'])
         self.model.to(self.device)
 
@@ -47,8 +49,7 @@ class Evaluator(object):
             _, xv = self.model.extract_embedding(feature)
         elif self.location == 'far': 
             xv, _ = self.model.extract_embedding(feature)
-            #  xv = self.model(feature)
-            xv = F.normalize(xv)
+            xv = F.l2_normalize(xv, dim = 1)
         return xv
 
     def compute_cosine_score(self): 
@@ -71,7 +72,7 @@ class Evaluator(object):
     def evaluate(self):
         self.model.eval()
         os.makedirs('exp/{}/test_xv'.format(self.exp_dir), exist_ok = True)
-        with torch.no_grad():
+        with of.no_grad():
            for feature, utt in tqdm(self.evalloader):
                utt = utt[0]
                feature = feature.to(self.device)

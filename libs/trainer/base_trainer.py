@@ -128,6 +128,7 @@ class BaseTrainer(object):
 
     def save(self, filename = None):
         #  model = self.model.module # DO NOT save DataParallel wrapper
+        model = self.model
         if filename is None:
             of.save({'epoch': self.current_epoch, 'state_dict': model.state_dict(), 'criterion': self.criterion.state_dict(),
                         'lr_scheduler': self.lr_scheduler.state_dict(), 'optimizer': self.optim.state_dict()},

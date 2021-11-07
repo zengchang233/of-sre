@@ -2,8 +2,10 @@ import sys
 import os
 sys.path.insert(0, '../../../')
 
-import torch
-from torch.utils.data import Dataset
+#  import torch
+#  from torch.utils.data import Dataset
+import oneflow as of
+from oneflow.utils.data import Dataset
 import soundfile as sf
 
 from libs.utils.utils import read_config
@@ -51,7 +53,8 @@ class SpeechEvalDataset(Dataset):
         return feat.squeeze(0), utt
     
 if __name__ == '__main__':
-    from torch.utils.data import DataLoader
+    #  from torch.utils.data import DataLoader
+    from oneflow.utils.data import DataLoader
     opts = read_config("conf/data.yaml")
     test_dataset = SpeechEvalDataset(opts)
     feature, uttid = test_dataset[0]

@@ -101,7 +101,7 @@ class XVTrainer(nnet_trainer.NNetTrainer):
                 #  self.lr_scheduler.step(dev_loss)
                 self.criterion.train()
                 self.model.train()
-                logging.info("Epoch {} Dev loss {:.8f} Dev acc {:.4%} LR {:.8f}".format(self.current_epoch, dev_loss, dev_acc, self.optim.state_dict()['param_groups'][0]['lr']))
+                logging.info("Epoch {} Dev loss {:.8f} Dev acc {:.4%} LR {:.8f}".format(self.current_epoch, dev_loss, dev_acc, self.optim.state_dict()['param_groups'][0]['_options']['lr']))
                 if self.best_dev_loss >= dev_loss:
                     self.best_dev_loss = dev_loss
                     self.best_dev_epoch = self.current_epoch
@@ -118,8 +118,8 @@ class XVTrainer(nnet_trainer.NNetTrainer):
         self.save()
 
     def _dev(self):
-        parallel_model = self.model
-        self.model = self.model.module
+        #  parallel_model = self.model
+        #  self.model = self.model.module
         self.model.eval()
         self.criterion.eval()
         dev_loss = 0
@@ -133,7 +133,7 @@ class XVTrainer(nnet_trainer.NNetTrainer):
                 _, prediction = of.max(logits, dim = 1)
                 dev_correct += (prediction == spk).sum().item()
                 dev_loss += am_loss.item()
-        self.model = parallel_model
+        #  self.model = parallel_model
         return dev_loss / self.trainset.dev_number, dev_correct / self.trainset.dev_number
 
     def extract_embedding(self, feature): 

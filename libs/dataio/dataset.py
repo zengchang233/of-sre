@@ -223,7 +223,7 @@ class SpeechTrainDataset(Dataset):
             (wav_path, _, __), spk = self.dev[idx]
             data, _ = self._load_audio(wav_path)
             feat = self.feature_extractor([data])
-            yield feat, of.LongTensor([spk])
+            yield feat, of.tensor([spk], dtype = of.int64)
             idx += 1
 
     def __call__(self):
