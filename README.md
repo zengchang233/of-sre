@@ -7,6 +7,19 @@ This repo contains several usual models including x-vector (TDNN, ETDNN, ECAPA-T
 
 It also contains several different training methodology such as few-shot learning (ProtoNet), discriminative learning (softmax variants)
 
+### Requirements
+
+```
+oneflow>=0.6.0
+python_speech_features
+librosa
+soundfile
+tqdm
+numpy
+matplotlib
+scipy
+```
+
 ### feature
 
 - [x] stft
