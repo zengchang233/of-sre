@@ -17,11 +17,11 @@ if [ $stage -le 0 ]; then
     # --mode depreciated
     if [ $debug == "true" ]; then
         python -m ipdb local/nnet/trainer.py --feat-type python_logfbank --arch tdnn --input-dim 80 \
-            --device cuda --bs 256 --loss AMSoftmax # --resume exp/Sun_Jul_11_10_48_55_2021/net_7.pth
+            --device cuda --bs 64 --loss AMSoftmax
         echo "frontend training done!"
     else
         python local/nnet/trainer.py --feat-type python_logfbank --arch tdnn --input-dim 80 \
-            --device cuda --bs 256 --loss AMSoftmax # --resume exp/Sun_Jul_11_10_48_55_2021/net_7.pth
+            --device cuda --bs 64 --loss AMSoftmax
         echo "frontend training done!"
     fi
     exit 0;

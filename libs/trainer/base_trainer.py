@@ -127,7 +127,7 @@ class BaseTrainer(object):
         self.model.load_state_dict(model_state_dict)
 
     def save(self, filename = None):
-        model = self.model.module # DO NOT save DataParallel wrapper
+        #  model = self.model.module # DO NOT save DataParallel wrapper
         if filename is None:
             of.save({'epoch': self.current_epoch, 'state_dict': model.state_dict(), 'criterion': self.criterion.state_dict(),
                         'lr_scheduler': self.lr_scheduler.state_dict(), 'optimizer': self.optim.state_dict()},
@@ -140,7 +140,7 @@ class BaseTrainer(object):
     def load(self, resume):
         ckpt = of.load(resume)
         if self.train_opts['device'] == 'cuda':
-            self.model.module.load_state_dict(ckpt['state_dict'])
+            self.model.load_state_dict(ckpt['state_dict'])
         else:
             self.model.load_state_dict(ckpt['state_dict'])
         if 'criterion' in ckpt and isinstance(ckpt['criterion'], dict):
