@@ -147,12 +147,12 @@ class NNetTrainer(base_trainer.BaseTrainer):
             utt_per_spk = self.train_opts['utt_per_spk']
             spk_per_batch = self.train_opts['spk_per_batch']
             batch_sampler = BalancedBatchSampler(self.n_spk, self.trainset.count, spk_per_batch, utt_per_spk)
-            self.trainloader = DataLoader(self.trainset, collate_fn = train_collate_fn, batch_sampler = batch_sampler, 
+            self.trainloader = DataLoader(self.trainset, collate_fn = train_collate_fn, batch_sampler = batch_sampler, prefetch_factor = 10, 
                                           num_workers = cpu_count, pin_memory = True)
         else:
             batch_sampler = None
             self.trainloader = DataLoader(self.trainset, shuffle = True, collate_fn = train_collate_fn, batch_sampler = batch_sampler, 
-                                          batch_size = self.train_opts['bs'] * self.device_num, prefetch_factor = 5, num_workers = cpu_count // 2)
+                                          batch_size = self.train_opts['bs'] * self.device_num, prefetch_factor = 10, num_workers = cpu_count)
     
     def train_epoch(self): 
         # you MUST overwrite this function

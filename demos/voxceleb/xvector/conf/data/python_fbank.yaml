@@ -1,4 +1,4 @@
-n_fft: 400
+n_fft: 512
 n_mels: 80
 win_length: 0.025
 hop_length: 0.01

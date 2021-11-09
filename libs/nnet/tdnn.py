@@ -60,23 +60,19 @@ class XVector(nn.Module):
 
         self.bn1 = nn.BatchNorm1d(embedding_dim)
         self.fc2 = nn.Linear(embedding_dim, embedding_dim)
-        #  self.bn2 = nn.BatchNorm1d(embedding_dim)
 
     def extract_embedding(self, x):
         x = self.frame_level(x)
         x = self.pooling(x)
-        #  x.squeeze_(-1)
         x = x.squeeze(-1)
         x_a = self.fc1(x)
-        x = self.activation(x)
-        x = self.bn1(x_a)
+        x = self.activation(x_a)
+        x = self.bn1(x)
         x_b = self.fc2(x)
         return x_b, x_a
         
     def forward(self, x):
         x, _ = self.extract_embedding(x)
-        #  x = self.activation(x)
-        #  x = self.bn2(x)
         return x
 
         

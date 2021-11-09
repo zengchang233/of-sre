@@ -1,8 +1,6 @@
 #! /bin/bash
 
-alias python=`which python3`
-
-stage=1
+stage=0
 debug=false
 # train a frontend module
 if [ $stage -le 0 ]; then
@@ -16,11 +14,11 @@ if [ $stage -le 0 ]; then
     # --device gpu or cpu
     # --mode depreciated
     if [ $debug == "true" ]; then
-        python -m ipdb local/nnet/trainer.py --feat-type python_logfbank --arch tdnn --input-dim 80 \
+        python -m ipdb local/nnet/trainer.py --feat-type python_logfbank --arch etdnn --input-dim 80 \
             --device cuda --bs 64 --loss AMSoftmax
         echo "frontend training done!"
     else
-        python local/nnet/trainer.py --feat-type python_logfbank --arch tdnn --input-dim 80 \
+        python local/nnet/trainer.py --feat-type python_logfbank --arch etdnn --input-dim 80 \
             --device cuda --bs 64 --loss AMSoftmax
         echo "frontend training done!"
     fi
