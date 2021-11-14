@@ -14,24 +14,24 @@ if [ $stage -le 0 ]; then
     # --device gpu or cpu
     # --mode depreciated
     if [ $debug == "true" ]; then
-        python -m ipdb local/nnet/trainer.py --feat-type python_logfbank --arch etdnn --input-dim 80 \
-            --device cuda --bs 64 --loss AMSoftmax
+        python -m ipdb local/nnet/trainer.py --feat-type python_logfbank --arch tdnn --input-dim 80 \
+            --device cuda --bs 64 --loss AMSoftmax # --resume exp/Wed_Nov_10_11_38_09_2021/net_9.pth
         echo "frontend training done!"
     else
-        python local/nnet/trainer.py --feat-type python_logfbank --arch etdnn --input-dim 80 \
-            --device cuda --bs 64 --loss AMSoftmax
+        python local/nnet/trainer.py --feat-type python_logfbank --arch tdnn --input-dim 80 \
+            --device cuda --bs 64 --loss AMSoftmax # --resume exp/Wed_Nov_10_11_38_09_2021/net_9.pth
         echo "frontend training done!"
     fi
     exit 0;
 fi
 
-##### Result #####
+##### PyTorch Result #####
 # model config: 
     # TDNN layers: [512,512,512,512,1500], [[-2,-1,0,1,2],[-2,0,2],[-3,0,3],[0],[0]]
     # FC layers: fc1+activation+bn, fc2 (without activation and bn), fc3 + softmax
 # feature: 80 dims kaldi fbank (log = true)
 # data repeat: false
-# loss: AMSoftmax (s=20,m=0.2)
+# loss: AMSoftmax (s=20,m=0.25)
 # voxceleb1 dev as training set, voxceleb1 test as test set
     # no augmentation, no repeat: EER: 5.10% (xvector in kaldi EER is 5.302% as reference)
     # no augmentation, repeat: EER: 4.97% (xvector in kaldi EER is 5.302% as reference)
@@ -40,6 +40,31 @@ fi
     # augmentation, ASP (implemented by myself), no repeat: 3.94% (using asv subtools implementation, the result is 4.05%)
     # augmentation, MultiHeadAttentionPooling, no repeat: 3.87%
     # augmentation, MultiResolutionAttentionPooling, no repeat: 3.99%
+
+##### OneFlow Result #####
+# tdnn model config: 
+    # TDNN layers: [512,512,512,512,1500], [[-2,-1,0,1,2],[-2,0,2],[-3,0,3],[0],[0]]
+    # FC layers: fc1+activation+bn, fc2 (without activation and bn), fc3 + softmax
+# feature: 80 dims python_speech_features logfbank
+# data repeat: false
+# loss: AMSoftmax (s=20,m=0.25)
+# voxceleb1 dev as training set, voxceleb1 test as test set
+    # no augmentation, no repeat: EER: 5.63% (xvector in kaldi EER is 5.302% as reference)
+    # no augmentation, repeat: EER: % (xvector in kaldi EER is 5.302% as reference)
+    # augmentation, no repeat: EER: % (xvector in kaldi EER is 5.302% as reference)
+    # augmentation, repeat: EER: % (xvector in kaldi EER is 5.302% as reference)
+
+# etdnn model config: 
+    # TDNN layers: [512,512,512,512,512,512,512,1500], [[-2,-1,0,1,2],[-2,0,2],[-3,0,3],[0],[0],[0],[0],[0]]
+    # FC layers: fc1+activation+bn, fc2 (without activation and bn), fc3 + softmax
+# feature: 80 dims python_speech_features logfbank
+# data repeat: false
+# loss: AMSoftmax (s=20,m=0.25)
+# voxceleb1 dev as training set, voxceleb1 test as test set
+    # no augmentation, no repeat: EER: 5.28% (xvector in kaldi EER is 5.302% as reference)
+    # no augmentation, repeat: EER: % (xvector in kaldi EER is 5.302% as reference)
+    # augmentation, no repeat: EER: 4.1622% (xvector in kaldi EER is 5.302% as reference)
+    # augmentation, repeat: EER: % (xvector in kaldi EER is 5.302% as reference)
 
 # evaluation on test set without backend (or using cosine backend)
 if [ $stage -le 1 ]; then
