@@ -39,8 +39,8 @@ scipy
 - [x] TDNN
 - [x] ETDNN
 - [ ] ECAPA-TDNN
-- [ ] ResNet18
-- [ ] ResNet34
+- [x] ResNet18
+- [x] ResNet34
 
 ### Pooling
 
