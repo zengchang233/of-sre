@@ -5,14 +5,11 @@ import yaml
 import os
 sys.path.insert(0, "../../")
 
-#  import torch
-#  from torch.utils.data import DataLoader
-#  import torch.optim as optim
-#  from torch.optim import lr_scheduler
 import oneflow as of
 from oneflow.utils.data import DataLoader
 import oneflow.optim as optim
 from oneflow.optim import lr_scheduler
+import oneflow.distributed as dist
 
 import libs.dataio.dataset as dataset
 from libs.utils.utils import read_config
@@ -83,30 +80,24 @@ class BaseTrainer(object):
         raise NotImplementedError("Please implement this function by yourself!")
 
     def _move_to_device(self):
-        if self.train_opts['device'] == 'cuda':
-            self.device = of.device('cuda')
-            #  if self.mode == 'test':
-            device_ids = [0]
-            device_num = 1
+        #  rank = dist.get_rank()
+        #  self.device = of.device('cuda', rank)
+        self.device = of.device('cuda')
+        device_ids = [0]
+        device_num = 1
+        #  else:
+        #      pass
+            #  device_ids = self.train_opts['gpus_id']
+            #  device_num = of.cuda.device_count()
+            #  if device_num >= len(device_ids):
+            #      device_num = len(device_ids)
             #  else:
-            #      pass
-                #  device_ids = self.train_opts['gpus_id']
-                #  device_num = of.cuda.device_count()
-                #  if device_num >= len(device_ids):
-                #      device_num = len(device_ids)
-                #  else:
-                #      logging.warn('There are only {} GPU cards in this machine, using all of them'.format(device_num))
-                #      device_ids = list(range(device_num))
-            #  self.model = of.nn.DataParallel(self.model.to(self.device), device_ids = device_ids)
-            logging.warn("Now only support single GPU training")
-            self.model.to(self.device)
-            logging.info("Using GPU: {}".format(device_ids))
-            self.device_num = device_num
-        else:
-            self.device = of.device('cpu')
-            self.model = self.model.to(self.device)
-            logging.info("Using CPU")
-            self.device_num = 1
+            #      logging.warn('There are only {} GPU cards in this machine, using all of them'.format(device_num))
+            #      device_ids = list(range(device_num))
+        #  self.model = of.nn.DataParallel(self.model.to(self.device), device_ids = device_ids)
+        self.model.to(self.device)
+        logging.info("Using GPU: {}".format(device_ids))
+        self.device_num = device_num
 
     def model_average(self, avg_num = 4):
         model_state_dict = {}

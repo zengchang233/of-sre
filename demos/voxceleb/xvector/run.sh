@@ -1,7 +1,9 @@
 #! /bin/bash
 
-stage=0
+stage=1
 debug=false
+
+
 # train a frontend module
 if [ $stage -le 0 ]; then
     # options:
@@ -18,8 +20,14 @@ if [ $stage -le 0 ]; then
             --device cuda --bs 64 --loss AMSoftmax # --resume exp/Wed_Nov_10_11_38_09_2021/net_9.pth
         echo "frontend training done!"
     else
-        python local/nnet/trainer.py --feat-type python_logfbank --arch tdnn --input-dim 80 \
-            --device cuda --bs 64 --loss AMSoftmax # --resume exp/Wed_Nov_10_11_38_09_2021/net_9.pth
+        export CUDA_VISIBLE_DEVICES="0"
+        if [ $CUDA_VISIBLE_DEVICES == "0" ]; then
+            python local/nnet/trainer.py --feat-type python_logfbank --arch tdnn --input-dim 80 \
+                --device cuda --bs 64 --loss AMSoftmax --resume exp/Wed_Nov_10_11_38_09_2021
+        else
+            nj=`echo $CUDA_VISIBLE_DEVICES | cut -d',' -f1- | wc -l`
+            python3 -m oneflow.distributed.launch --nproc_per_node $nj local/nnet/trainer.py \
+                --feat-type python_logfbank --arch tdnn --input-dim 80 --device cuda --bs 64 --loss AMSoftmax
         echo "frontend training done!"
     fi
     exit 0;
@@ -51,7 +59,7 @@ fi
 # voxceleb1 dev as training set, voxceleb1 test as test set
     # no augmentation, no repeat: EER: 5.63% (xvector in kaldi EER is 5.302% as reference)
     # no augmentation, repeat: EER: % (xvector in kaldi EER is 5.302% as reference)
-    # augmentation, no repeat: EER: % (xvector in kaldi EER is 5.302% as reference)
+    # augmentation, no repeat: EER: 4.31% (xvector in kaldi EER is 5.302% as reference)
     # augmentation, repeat: EER: % (xvector in kaldi EER is 5.302% as reference)
 
 # etdnn model config: 
@@ -63,7 +71,7 @@ fi
 # voxceleb1 dev as training set, voxceleb1 test as test set
     # no augmentation, no repeat: EER: 5.28% (xvector in kaldi EER is 5.302% as reference)
     # no augmentation, repeat: EER: % (xvector in kaldi EER is 5.302% as reference)
-    # augmentation, no repeat: EER: 4.1622% (xvector in kaldi EER is 5.302% as reference)
+    # augmentation, no repeat: EER: 4.16% (xvector in kaldi EER is 5.302% as reference)
     # augmentation, repeat: EER: % (xvector in kaldi EER is 5.302% as reference)
 
 # evaluation on test set without backend (or using cosine backend)
