@@ -1,0 +1,6 @@
+n_fft: 512
+n_mels: 40
+win_length: 0.025
+hop_length: 0.01
+normalize: true
+delta: false
