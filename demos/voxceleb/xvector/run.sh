@@ -1,8 +1,16 @@
 #! /bin/bash
 
-stage=1
+stage=0
 debug=false
 
+. ./parse_options.sh
+
+voxceleb1_dev=/home/smg/zengchang/data/voxceleb1/dev
+
+if [ $stage -le -1 ]; then
+    # prepare manifest.csv file, only implement once.
+    python ../preprocess.py --path $voxceleb1_dev
+fi
 
 # train a frontend module
 if [ $stage -le 0 ]; then
@@ -30,7 +38,6 @@ if [ $stage -le 0 ]; then
                 --feat-type python_logfbank --arch tdnn --input-dim 80 --device cuda --bs 64 --loss AMSoftmax
         echo "frontend training done!"
     fi
-    exit 0;
 fi
 
 ##### PyTorch Result #####
@@ -76,21 +83,12 @@ fi
 
 # evaluation on test set without backend (or using cosine backend)
 if [ $stage -le 1 ]; then
-    expdir=$1
-    # for x in `seq $start $stop`; do
-    #     python local/evaluation.py -e $expdir -m net_${x}.pth -d cuda -l far
-        python local/evaluation.py -e $expdir -m best_dev_model.pth -d cuda -l far
-    # done
+    expdir=`ls -lht ./exp | grep "^d" | head -1 | rev | cut -d' ' -f1 | rev`
+    python local/evaluation.py -e $expdir -m best_dev_model.pth -d cuda -l far
     echo "scoring with only frontend done!"
-    exit 0;
 fi
 
 # train a backend module
 # if [ $stage -le 1 ]; then
 #     python local/backend/backend_trainer.py
 # fi
-
-# evaluation on test set
-if [ $stage -le 2 ]; then
-    python local/evaluation.py -e Sat_May__8_11_24_59_2021 -m best_dev_model.pth -d gpu -l far
-fi 

@@ -18,6 +18,7 @@ tqdm
 numpy
 matplotlib
 scipy
+scikit-learn
 ```
 
 ### feature
@@ -70,8 +71,26 @@ scipy
 
 #### Datasets
 
-- [x] VoxCeleb 1&2
+- [x] VoxCeleb 1
+- [ ] VoxCeleb 2
 - [ ] CNCeleb 1&2
+
+#### Usage
+
+Now this repo provides two demos for speaker verification experiment. One is tdnn-based xvector including TDNN and ETDNN. The other is resnet-based rvector including ResNet18 and ResNet34.
+
+Please read `run.sh` file carefully in `of-sre/demos/voxceleb/xvector` or `of-sre/demos/voxceleb/resnet`. There are 3 stages in this file.
+
+```
+# 1. preprocess
+./run.sh --stage -1 # It will generate manifest file which organizes utterances according to speakers. Besides, it also contains meta informations such as duration about these utterances.
+
+# 2. training speaker encoder
+./run.sh --stage 0 # It will train a speaker encoder for extracting speaker embedding.
+
+# 3. evaluation
+./run.sh --stage 1 # It will extract speaker embedding from test set and evaluate the performance by using cosine score
+```
 
 ### Note
 

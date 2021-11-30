@@ -1,5 +1,6 @@
 import csv
 import os
+import argparse
 
 import soundfile as sf
 from tqdm import tqdm
@@ -12,7 +13,7 @@ import numpy as np
 from multiprocessing import Pool, Manager
 
 SAMPLE_RATE = 16000
-MANIFEST_DIR = "/home/smg/zengchang/data/manifest/{}_manifest.csv"
+MANIFEST_DIR = "./data/manifest/{}_manifest.csv" 
 os.makedirs(os.path.dirname(MANIFEST_DIR), exist_ok = True)
 
 def read_manifest(dataset, start = 0):
@@ -31,33 +32,7 @@ def save_manifest(dataset, rows):
         writer = csv.writer(f)
         writer.writerows(rows)
 
-def create_manifest_librispeech():
-    dataset = 'SLR12'
-    n_speakers = 0
-    log = []
-    sids = dict()
-    for m in ['train-clean-100', 'train-clean-360']:
-        train_dataset = '/home/zeng/zeng/datasets/librispeech/{}'.format(m)
-        for speaker in tqdm(os.listdir(train_dataset), desc = dataset):
-            speaker_dir = os.path.join(train_dataset, speaker)
-            if os.path.isdir(speaker_dir):
-                speaker = int(speaker)
-                if sids.get(speaker) is None:
-                    sids[speaker] = n_speakers
-                    n_speakers += 1
-                for task in os.listdir(speaker_dir):
-                    task_dir = os.path.join(speaker_dir, task)
-                    aid = 0
-                    for audio in os.listdir(task_dir):
-                        if audio[0] != '.' and (audio.find('.flac') != -1 or audio.find('.wav') != -1):
-                            filename = os.path.join(task_dir, audio)
-                            info = sf.info(filename)
-                            log.append((sids[speaker], aid, filename, info.duration, info.samplerate))
-                        aid += 1
-    save_manifest(dataset, log)
-
-def make_speaker_list():
-    train_dataset = '/home/smg/zengchang/data/voxceleb1/dev/wav'
+def make_speaker_list(train_dataset):
     speakers_path_list = []
     count = 0
     for speaker in os.listdir(train_dataset):
@@ -72,13 +47,11 @@ def make_speaker_list():
     return res
 
 def create_manifest_voxceleb1(speakers_path):
-    dataset = 'voxceleb1'
+    print("Starting prepare voxceleb1 dataset")
     n_speakers = speakers_path[-1]
     global log
-    train_dataset = '/home/smg/zengchang/data/voxceleb1/dev/wav'
     
-    for speaker in tqdm(speakers_path[:-1], desc = dataset):
-        #  speaker_dir = os.path.join(train_dataset, speaker)
+    for speaker in speakers_path[:-1]:
         aid = 0
         for sub_speaker in os.listdir(speaker):
             sub_speaker_path = os.path.join(speaker, sub_speaker)
@@ -90,28 +63,8 @@ def create_manifest_voxceleb1(speakers_path):
                         log.append((n_speakers, aid, filename, info.duration, info.samplerate))
                         aid += 1
         n_speakers += 1
-    #  save_manifest(dataset, log)
+    print("Prepare voxceleb1 dataset done")
     
-def create_manifest_voxceleb2(speakers_path):
-    dataset = 'voxceleb2'
-    n_speakers = speakers_path[-1]
-    global log
-    train_dataset = '/home/smg/zengchang/data/voxceleb2/dev/wav'
-    for speaker in tqdm(speakers_path[:-1], desc = dataset):
-        #  speaker_dir = os.path.join(train_dataset, speaker)
-        aid = 0
-        for sub_speaker in os.listdir(speaker):
-            sub_speaker_path = os.path.join(speaker, sub_speaker)
-            if os.path.isdir(sub_speaker_path):
-                for audio in os.listdir(sub_speaker_path):
-                    if audio[0] != '.' and (audio.find('.flac') != -1 or audio.find('.wav') != -1):
-                        filename = os.path.join(sub_speaker_path, audio)
-                        info = sf.info(filename)
-                        log.append((n_speakers, aid, filename, info.duration, info.samplerate))                    
-                        aid += 1
-        n_speakers += 1
-    #  save_manifest(dataset, log)
-
 def merge_manifest(datasets, dataset):
     rows = []
     n = len(datasets)
@@ -125,11 +78,11 @@ def merge_manifest(datasets, dataset):
         writer.writerows(rows)
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--path', type = str, default = './data', help = 'dataset path')
+    args = parser.parse_args()
     log = Manager().list()
-    speakers_path_list = make_speaker_list()
-    #  create_manifest_voxceleb1()
+    speakers_path_list = make_speaker_list(args.path)
     with Pool(40) as p:
         p.map(create_manifest_voxceleb1, speakers_path_list)
-    save_manifest("voxceleb1_augment", log)
-    #  create_manifest_voxceleb2()
-    #  merge_manifest(['aug_voxceleb2_dev', 'aug_voxceleb2_test'], 'aug_voxceleb2')
+    save_manifest("voxceleb1", log)
